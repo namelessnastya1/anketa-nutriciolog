@@ -1,0 +1,522 @@
+<title>Анкета нутрициолога</title>
+<meta name="description" content="Анкета для первичной консультации нутрициолога">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#FAF7EF;
+    --surface:#FFFFFF;
+    --panel:#F3F0E4;
+    --ink:#212A1F;
+    --soft-ink:#5C6857;
+    --line:#E3E0D1;
+    --rule:#E9E6D6;
+    --accent:#47823B;
+    --accent-2:#EAF1DF;
+    --accent-ink:#2F5C29;
+    --on-accent:#FFFFFF;
+    --berry:#A83E5B;
+    --shadow:0 1px 2px rgba(33,42,31,.04), 0 8px 24px -16px rgba(33,42,31,.18);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#13160F;
+      --surface:#1C2016;
+      --panel:#232A1C;
+      --ink:#ECEEE1;
+      --soft-ink:#9BA58C;
+      --line:#333A2A;
+      --rule:#2C3222;
+      --accent:#93C877;
+      --accent-2:#232C1B;
+      --accent-ink:#B9DCA4;
+      --on-accent:#14170F;
+      --berry:#E1889D;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -18px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#13160F;
+    --surface:#1C2016;
+    --panel:#232A1C;
+    --ink:#ECEEE1;
+    --soft-ink:#9BA58C;
+    --line:#333A2A;
+    --rule:#2C3222;
+    --accent:#93C877;
+    --accent-2:#232C1B;
+    --accent-ink:#B9DCA4;
+    --on-accent:#14170F;
+    --berry:#E1889D;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -18px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Karla","Helvetica Neue",Arial,sans-serif;
+    line-height:1.5;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .page{
+    max-width:780px;
+    margin:0 auto;
+    padding:40px 22px 64px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    background:var(--accent-2);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:38px 34px 30px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .eyebrow{
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent-ink);
+  }
+  .masthead h1{
+    font-family:"Fraunces","Georgia",serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(1.9rem,5.4vw,2.85rem);
+    line-height:1.12;
+    text-wrap:balance;
+    margin:.5rem auto 0;
+    max-width:16ch;
+    color:var(--ink);
+  }
+  .produce{
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:clamp(14px,5vw,34px);
+    margin-top:22px;
+    color:var(--accent);
+    opacity:.62;
+  }
+  .produce svg{width:44px;height:44px;flex:none}
+
+  /* ---------- Intro note ---------- */
+  .intro-note{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:3px solid var(--accent);
+    border-radius:10px;
+    padding:14px 16px;
+    margin:20px 0 34px;
+    font-size:.92rem;
+    color:var(--soft-ink);
+  }
+  .intro-note svg{width:20px;height:20px;color:var(--accent);flex:none;margin-top:1px}
+  .intro-note b{color:var(--ink);font-weight:700}
+
+  /* ---------- Sections ---------- */
+  #form-root{display:flex;flex-direction:column;gap:20px}
+  .section{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:26px 26px 28px;
+    break-inside:avoid;
+  }
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .sec-icon{
+    width:40px;height:40px;flex:none;
+    display:grid;place-items:center;
+    background:var(--accent-2);
+    color:var(--accent);
+    border-radius:11px;
+  }
+  .sec-icon svg{width:22px;height:22px}
+  .sec-titles{display:flex;flex-direction:column;gap:1px}
+  .sec-titles .eyebrow{font-size:.66rem;letter-spacing:.16em;color:var(--soft-ink)}
+  .sec-titles h2{
+    font-family:"Fraunces","Georgia",serif;
+    font-weight:600;
+    font-size:1.35rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .note{
+    background:var(--accent-2);
+    border-radius:8px;
+    padding:10px 14px;
+    margin:10px 0 4px;
+    font-size:.86rem;
+    color:var(--accent-ink);
+  }
+
+  /* ---------- Fields ---------- */
+  .fields{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px 26px;
+    margin-top:16px;
+  }
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .field.full{grid-column:1 / -1}
+  .field label{
+    font-size:.9rem;
+    font-weight:500;
+    color:var(--soft-ink);
+    text-wrap:pretty;
+  }
+  input.line{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid var(--line);
+    background:transparent;
+    padding:6px 2px;
+    font:inherit;
+    font-size:1rem;
+    color:var(--ink);
+  }
+  input.line:focus{border-bottom-color:var(--accent);outline:none}
+  textarea.area{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background-color:var(--surface);
+    background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--rule) 31px,var(--rule) 32px);
+    background-attachment:local;
+    padding:4px 12px 8px;
+    font:inherit;
+    font-size:1rem;
+    line-height:32px;
+    color:var(--ink);
+    resize:vertical;
+    overflow:hidden;
+  }
+  textarea.area:focus{border-color:var(--accent);outline:none}
+  input.line:focus-visible,
+  textarea.area:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+
+  /* ---------- Footer ---------- */
+  .closer{
+    margin-top:26px;
+    padding:24px 26px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+  }
+  .closer .date-row{max-width:280px;margin-bottom:18px}
+  .disclaimer{font-size:.85rem;color:var(--soft-ink);margin:0}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+  .btn{
+    font-family:inherit;
+    font-weight:600;
+    font-size:.9rem;
+    padding:10px 20px;
+    border-radius:999px;
+    border:1.5px solid var(--accent);
+    color:var(--accent);
+    background:transparent;
+    cursor:pointer;
+  }
+  .btn:hover{background:var(--accent-2)}
+  .btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+  .btn.primary:hover{background:var(--accent-ink)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint{font-size:.8rem;color:var(--soft-ink)}
+  .hint b{color:var(--accent);font-weight:600}
+
+  noscript{display:block;text-align:center;padding:40px;color:var(--soft-ink)}
+
+  @media (max-width:560px){
+    .fields{grid-template-columns:1fr}
+    .field.half{grid-column:1 / -1}
+    .section{padding:22px 18px 24px}
+    .masthead{padding:30px 20px 24px}
+  }
+
+  @media (prefers-reduced-motion:no-preference){
+    .btn{transition:background .15s ease}
+    input.line,textarea.area{transition:border-color .15s ease}
+  }
+
+  @media print{
+    @page{margin:15mm}
+    body{background:#fff;color:#1a1a1a}
+    .page{max-width:100%;padding:0}
+    .no-print{display:none !important}
+    .masthead{background:#eef3e6;border-color:#ccd}
+    .section,.closer{box-shadow:none;border-color:#d8d8cf;break-inside:avoid}
+    .produce{opacity:.5}
+    textarea.area{background-color:#fff}
+  }
+</style>
+
+<div class="page">
+  <header class="masthead">
+    <p class="eyebrow">Первичная консультация</p>
+    <h1>Анкета для консультации нутрициолога</h1>
+    <div class="produce" aria-hidden="true">
+      <!-- веточка зелени -->
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 41C19 35 27 25 37 9"/>
+        <path d="M24 27c-3-2-4-7-1-10 3 2 4 7 1 10z"/>
+        <path d="M31 19c-2-3-1-8 2-10 2 3 1 8-2 10z"/>
+        <path d="M18 34c-3-1-6-5-5-9 4 1 6 5 5 9z"/>
+      </svg>
+      <!-- морковь -->
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 43 33 25c1.6-1.6 4 .8 2.4 2.4L17.5 45.5c-1.3 1.3-3.3-.2-2.5-2.5z"/>
+        <path d="M32 25l2-7M34 26l6-4M30 23l0-8"/>
+        <path d="M21 34l3 1M25 30l3 1"/>
+      </svg>
+      <!-- яблоко -->
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 16c-4-4-12-3-13 5-1 9 5 20 13 20s14-11 13-20c-1-8-9-9-13-5z"/>
+        <path d="M24 16c0-4 1-7 4-9"/>
+        <path d="M27 9c3-2 7-1 8 2-3 2-7 1-8-2z"/>
+      </svg>
+      <!-- стакан воды -->
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 13h18l-2.5 27h-13z"/>
+        <path d="M16 23h16"/>
+        <path d="M24 4c2.5 3.4 4.5 5.8 4.5 8.5a4.5 4.5 0 0 1-9 0C19.5 9.8 21.5 7.4 24 4z"/>
+      </svg>
+      <!-- авокадо -->
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M24 6c8 0 13 8 13 19s-6 17-13 17S11 35 11 25 16 6 24 6z"/>
+        <path d="M24 13c5 0 9 6 9 13s-4 12-9 12-9-5-9-12 4-13 9-13z"/>
+        <circle cx="24" cy="25" r="4.6"/>
+      </svg>
+    </div>
+  </header>
+
+  <p class="intro-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+    <span><b>Заполняйте анкету тщательно и очень подробно.</b> Опишите даже самые незначительные, на первый взгляд неважные детали — вместе они складываются в полную картину.</span>
+  </p>
+
+  <div id="form-root"></div>
+
+  <section class="closer">
+    <div class="field date-row">
+      <label for="fill_date">Дата заполнения</label>
+      <input class="line" type="text" id="fill_date" data-k="fill_date" name="fill_date" placeholder="дд.мм.гггг">
+    </div>
+    <p class="disclaimer">Спасибо за подробные ответы. Рекомендации нутрициолога носят профилактический характер и не заменяют консультацию врача.</p>
+    <div class="actions no-print">
+      <button class="btn primary" id="print-btn" type="button">Печать / Сохранить в PDF</button>
+      <button class="btn" id="clear-btn" type="button">Очистить черновик</button>
+      <span class="hint" id="save-hint">Черновик сохраняется <b>в этом браузере</b></span>
+    </div>
+  </section>
+</div>
+
+<noscript>Чтобы заполнить анкету на экране, включите JavaScript. Либо распечатайте эту страницу и заполните от руки.</noscript>
+
+<script>
+(function(){
+  "use strict";
+
+  var ICONS = {
+    user:'<path d="M4 5h16v14H4z"/><circle cx="9" cy="10.5" r="2.2"/><path d="M5.6 16c.6-2.2 5.2-2.2 6.8 0"/><path d="M14.5 9H19M14.5 12.5H19"/>',
+    body:'<circle cx="12" cy="4.5" r="1.8"/><path d="M12 6.6v8.4"/><path d="M12 15l-3.5 5.5M12 15l3.5 5.5"/><path d="M6 10h12"/>',
+    heart:'<path d="M12 20S4 14 4 8.6A4.6 4.6 0 0 1 12 6a4.6 4.6 0 0 1 8 2.6C20 14 12 20 12 20z"/>',
+    activity:'<path d="M3 12h4l2.5-6 4 13 2.5-7H21"/>',
+    moon:'<path d="M20 13.4A8 8 0 1 1 10.6 4a6.2 6.2 0 0 0 9.4 9.4z"/><path d="M17 4.5l.6 1.6 1.6.6-1.6.6L17 9.5l-.6-1.6L14.8 7l1.6-.6z"/>',
+    sun:'<circle cx="12" cy="12" r="3.6"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.5 1.5M16.9 16.9l1.5 1.5M18.4 5.6l-1.5 1.5M7.1 16.9l-1.5 1.5"/>',
+    bowl:'<path d="M4 11h13a6.5 6.5 0 0 1-13 0z"/><path d="M6.5 11c0-3 2-5.4 4.7-5.7"/><path d="M20 3.5v7.5M20 11c0 2-1 2.4-1 4.5M18.4 3.5v3.2a1.6 1.6 0 0 0 3.2 0V3.5"/>',
+    water:'<path d="M12 3.5c3.2 4.3 6 7.4 6 11a6 6 0 0 1-12 0c0-3.6 2.8-6.7 6-11z"/>',
+    glass:'<path d="M8 3.5h8l-1 6.2a3 3 0 0 1-6 0z"/><path d="M12 15v5M9 20.5h6"/>',
+    target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22"/>'
+  };
+
+  var FORM = [
+    { n:'01', title:'Личные данные', icon:'user', fields:[
+      {k:'last_name',  label:'Фамилия', type:'line', half:true},
+      {k:'first_name', label:'Имя', type:'line', half:true},
+      {k:'phone',      label:'Телефон', type:'line', half:true},
+      {k:'birth',      label:'Дата рождения', type:'line', half:true},
+      {k:'age',        label:'Возраст (полных лет)', type:'line', half:true}
+    ]},
+    { n:'02', title:'Параметры тела', icon:'body',
+      note:'Вес измеряйте утром, натощак, сразу после пробуждения — до завтрака.', fields:[
+      {k:'height',      label:'Рост, см', type:'line', half:true},
+      {k:'weight_now',  label:'Текущий вес (утром до завтрака)', type:'line', half:true},
+      {k:'weight_goal', label:'Желаемый вес', type:'line', half:true},
+      {k:'waist',       label:'Обхват талии, см', type:'line', half:true},
+      {k:'hips',        label:'Обхват бёдер, см', type:'line', half:true}
+    ]},
+    { n:'03', title:'Здоровье и жалобы', icon:'heart', fields:[
+      {k:'complaints',  label:'Опишите подробно жалобы, которые вас беспокоят', type:'area', lines:5},
+      {k:'diseases',    label:'Есть ли у вас заболевания или патологии? Если да — какую терапию проходите и наблюдаетесь ли у врача?', type:'area', lines:4},
+      {k:'supplements', label:'Какие БАДы и медикаменты сейчас принимаете? В какой дозировке и по чьему назначению?', type:'area', lines:4}
+    ]},
+    { n:'04', title:'Образ жизни и активность', icon:'activity', fields:[
+      {k:'daily_activity', label:'Опишите вашу дневную активность и образ жизни как можно подробнее', type:'area', lines:4},
+      {k:'sport',          label:'Занимаетесь ли вы спортом? Каким, как часто, какой регулярности и продолжительности?', type:'area', lines:3},
+      {k:'work',           label:'Какая у вас работа — активная или сидячая? Род профессии', type:'area', lines:2}
+    ]},
+    { n:'05', title:'Сон', icon:'moon', fields:[
+      {k:'sleep_quality',    label:'Опишите качество вашего сна', type:'area', lines:3},
+      {k:'sleep_hours',      label:'Сколько часов вы спите в будни? Высыпаетесь ли?', type:'line'},
+      {k:'sleep_wake_times', label:'Время отхода ко сну и время пробуждения', type:'line'},
+      {k:'insomnia',         label:'Бывает ли бессонница или частые пробуждения?', type:'area', lines:2},
+      {k:'wake_easy',        label:'Лёгкое ли пробуждение по утрам?', type:'line'}
+    ]},
+    { n:'06', title:'Энергия и настроение', icon:'sun', fields:[
+      {k:'energy',        label:'Опишите свою энергию в течение дня: как вы себя чувствуете с утра и под вечер?', type:'area', lines:4},
+      {k:'nervous_state', label:'Какое у вас нервно-психическое состояние? С чем оно связано?', type:'area', lines:3}
+    ]},
+    { n:'07', title:'Питание и рацион', icon:'bowl',
+      note:'Самый важный блок. Опишите обычный день максимально подробно — с продуктами, порциями и временем.', fields:[
+      {k:'ration',           label:'Опишите ваш ежедневный рацион с момента пробуждения: как питаетесь, сколько раз в день, полноценные приёмы пищи или перекусы, какими продуктами, во сколько обычно заканчивается ужин', type:'area', lines:7},
+      {k:'diet_system',      label:'Придерживаетесь ли вы какой-либо системы питания? Исключаете ли какие-то группы продуктов и почему?', type:'area', lines:3},
+      {k:'food_addictions',  label:'Есть ли пищевые зависимости? Кофе, сладости, мучное или что-то ещё, без чего вы не представляете свою жизнь', type:'area', lines:3},
+      {k:'disliked_allergy', label:'Есть ли нелюбимые продукты, которые вы не можете есть? Продукты, вызывающие аллергическую реакцию?', type:'area', lines:3},
+      {k:'overeating',       label:'Бывают ли переедания или срывы? Если да — какой едой вы переедаете?', type:'area', lines:3}
+    ]},
+    { n:'08', title:'Вода и напитки', icon:'water', fields:[
+      {k:'water',        label:'Сколько питьевой воды вы выпиваете в день?', type:'line'},
+      {k:'other_drinks', label:'Сколько других жидкостей в день? Чай, кофе, цикорий, какао, соки, морсы, компоты и т.п.', type:'area', lines:3}
+    ]},
+    { n:'09', title:'Вредные привычки', icon:'glass', fields:[
+      {k:'smoking', label:'Курите ли вы? Если да — сколько сигарет в день?', type:'line'},
+      {k:'alcohol', label:'Употребляете ли алкоголь? Сколько раз в неделю, какой крепости и в каком количестве?', type:'area', lines:3}
+    ]},
+    { n:'10', title:'Цели и обратная связь', icon:'target', fields:[
+      {k:'goal',          label:'С какой целью вы обратились ко мне? Что хотите изменить или улучшить в своей жизни?', type:'area', lines:4},
+      {k:'source',        label:'Откуда вы обо мне узнали?', type:'line'},
+      {k:'anything_else', label:'Расскажите, что ещё вас беспокоит и чем вы хотели бы поделиться', type:'area', lines:4}
+    ]}
+  ];
+
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  function iconSvg(name){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICONS[name] + '</svg>';
+  }
+  function el(tag, cls){ var e = document.createElement(tag); if(cls) e.className = cls; return e; }
+
+  var root = document.getElementById('form-root');
+
+  FORM.forEach(function(sec){
+    var s = el('section','section');
+
+    var head = el('div','sec-head');
+    var ic = el('span','sec-icon');
+    ic.innerHTML = iconSvg(sec.icon);
+    var titles = el('div','sec-titles');
+    var eb = el('span','eyebrow'); eb.textContent = 'Раздел ' + sec.n;
+    var h2 = el('h2'); h2.textContent = sec.title;
+    titles.appendChild(eb); titles.appendChild(h2);
+    head.appendChild(ic); head.appendChild(titles);
+    s.appendChild(head);
+
+    if(sec.note){
+      var nt = el('p','note'); nt.textContent = sec.note; s.appendChild(nt);
+    }
+
+    var fields = el('div','fields');
+    sec.fields.forEach(function(f){
+      var wrap = el('div','field' + (f.type === 'area' ? ' full' : (f.half ? ' half' : ' full')));
+      var id = 'f_' + f.k;
+      var lab = el('label'); lab.setAttribute('for', id); lab.textContent = f.label;
+      wrap.appendChild(lab);
+
+      var input;
+      if(f.type === 'area'){
+        input = el('textarea','area');
+        input.rows = 1;
+        input.style.minHeight = ((f.lines || 3) * 32 + 12) + 'px';
+      } else {
+        input = el('input','line');
+        input.type = 'text';
+      }
+      input.id = id;
+      input.name = f.k;
+      input.setAttribute('data-k', f.k);
+      wrap.appendChild(input);
+      fields.appendChild(wrap);
+    });
+    s.appendChild(fields);
+    root.appendChild(s);
+  });
+
+  // ---- auto-grow textareas ----
+  function grow(t){
+    t.style.height = 'auto';
+    t.style.height = Math.max(t.scrollHeight, parseInt(t.style.minHeight || '0', 10)) + 'px';
+  }
+  var areas = document.querySelectorAll('textarea.area');
+  areas.forEach(function(t){ t.addEventListener('input', function(){ grow(t); }); });
+
+  // ---- draft persistence (this browser only) ----
+  var KEY = 'anketa-nutri-v1';
+  var allFields = document.querySelectorAll('[data-k]');
+  var hint = document.getElementById('save-hint');
+  var saveTimer = null;
+
+  function collect(){
+    var o = {};
+    allFields.forEach(function(elm){ o[elm.getAttribute('data-k')] = elm.value; });
+    return o;
+  }
+  function save(){
+    try{
+      localStorage.setItem(KEY, JSON.stringify(collect()));
+      if(hint){
+        hint.innerHTML = 'Черновик сохранён <b>в этом браузере</b>';
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(function(){
+          hint.innerHTML = 'Черновик сохраняется <b>в этом браузере</b>';
+        }, 2200);
+      }
+    }catch(e){ /* private mode / storage disabled */ }
+  }
+  function restore(){
+    var raw = null;
+    try{ raw = localStorage.getItem(KEY); }catch(e){ return; }
+    if(!raw) return;
+    var data;
+    try{ data = JSON.parse(raw); }catch(e){ return; }
+    allFields.forEach(function(elm){
+      var k = elm.getAttribute('data-k');
+      if(data[k] != null) elm.value = data[k];
+    });
+  }
+
+  restore();
+  areas.forEach(grow);
+
+  var debounce = null;
+  allFields.forEach(function(elm){
+    elm.addEventListener('input', function(){
+      clearTimeout(debounce);
+      debounce = setTimeout(save, 400);
+    });
+  });
+
+  document.getElementById('print-btn').addEventListener('click', function(){ window.print(); });
+  document.getElementById('clear-btn').addEventListener('click', function(){
+    if(!window.confirm('Очистить все поля и удалить сохранённый черновик?')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    allFields.forEach(function(elm){ elm.value = ''; });
+    areas.forEach(grow);
+    if(hint) hint.innerHTML = 'Черновик очищен';
+  });
+})();
+</script>
