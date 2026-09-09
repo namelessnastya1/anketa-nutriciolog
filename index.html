@@ -239,6 +239,14 @@
   .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .hint{font-size:.8rem;color:var(--soft-ink)}
   .hint b{color:var(--accent);font-weight:600}
+  .consent{font-size:.82rem;color:var(--soft-ink);margin:4px 0 14px;max-width:60ch}
+  .btn.ghost{border-color:var(--line);color:var(--soft-ink)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .status{font-size:.9rem;margin:12px 0 0;min-height:1.15em;font-weight:600}
+  .status.err{color:var(--berry)}
+  .status.ok{color:var(--accent)}
+  .thanks{text-align:left}
+  .thanks p{margin:6px 0 0;color:var(--soft-ink);font-size:.95rem}
 
   noscript{display:block;text-align:center;padding:40px;color:var(--soft-ink)}
 
@@ -317,12 +325,23 @@
       <label for="fill_date">Дата заполнения</label>
       <input class="line" type="text" id="fill_date" data-k="fill_date" name="fill_date" placeholder="дд.мм.гггг">
     </div>
-    <p class="disclaimer">Спасибо за подробные ответы. Рекомендации нутрициолога носят профилактический характер и не заменяют консультацию врача.</p>
+    <p class="consent">Отправляя анкету, вы даёте согласие на обработку указанных данных для подготовки консультации. Ответы поступают напрямую нутрициологу и не передаются третьим лицам.</p>
     <div class="actions no-print">
-      <button class="btn primary" id="print-btn" type="button">Печать / Сохранить в PDF</button>
-      <button class="btn" id="clear-btn" type="button">Очистить черновик</button>
-      <span class="hint" id="save-hint">Черновик сохраняется <b>в этом браузере</b></span>
+      <button class="btn primary" id="send-btn" type="button">Отправить анкету</button>
+      <button class="btn" id="print-btn" type="button">Печать / PDF</button>
+      <button class="btn ghost" id="clear-btn" type="button">Очистить</button>
     </div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <p class="hint no-print" id="save-hint">Черновик сохраняется <b>в этом браузере</b>, пока вы не отправили анкету.</p>
+    <p class="disclaimer">Рекомендации нутрициолога носят профилактический характер и не заменяют консультацию врача.</p>
+  </section>
+
+  <section class="section thanks" id="thanks" hidden>
+    <div class="sec-head">
+      <span class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <div class="sec-titles"><span class="eyebrow">Готово</span><h2>Анкета отправлена</h2></div>
+    </div>
+    <p>Спасибо за подробные ответы — они уже у нутрициолога. С вами свяжутся. Эту страницу можно закрыть.</p>
   </section>
 </div>
 
@@ -331,6 +350,9 @@
 <script>
 (function(){
   "use strict";
+
+  // Куда отправляются ответы: URL веб-приложения Google Apps Script (заканчивается на /exec).
+  var ENDPOINT = "";
 
   var ICONS = {
     user:'<path d="M4 5h16v14H4z"/><circle cx="9" cy="10.5" r="2.2"/><path d="M5.6 16c.6-2.2 5.2-2.2 6.8 0"/><path d="M14.5 9H19M14.5 12.5H19"/>',
@@ -517,6 +539,48 @@
     allFields.forEach(function(elm){ elm.value = ''; });
     areas.forEach(grow);
     if(hint) hint.innerHTML = 'Черновик очищен';
+  });
+
+  // ---- submit to nutritionist ----
+  var sendBtn = document.getElementById('send-btn');
+  var statusEl = document.getElementById('status');
+  function setStatus(msg, kind){
+    statusEl.textContent = msg || '';
+    statusEl.className = 'status' + (kind ? ' ' + kind : '');
+  }
+  sendBtn.addEventListener('click', function(){
+    if(!ENDPOINT){
+      setStatus('Форма ещё не подключена к таблице ответов. Сообщите об этом нутрициологу.', 'err');
+      return;
+    }
+    var data = collect();
+    var required = [['last_name','фамилию'],['first_name','имя'],['phone','телефон']];
+    var missing = required.filter(function(r){ return !String(data[r[0]] || '').trim(); });
+    if(missing.length){
+      setStatus('Пожалуйста, укажите ' + missing.map(function(m){ return m[1]; }).join(', ') + '.', 'err');
+      var first = document.getElementById('f_' + missing[0][0]);
+      if(first){ first.focus(); first.scrollIntoView({block:'center', behavior:'smooth'}); }
+      return;
+    }
+    sendBtn.disabled = true;
+    setStatus('Отправляю…');
+    var body = new URLSearchParams();
+    Object.keys(data).forEach(function(k){ body.append(k, data[k]); });
+    body.append('page_url', location.href);
+    fetch(ENDPOINT, { method:'POST', mode:'no-cors', body: body })
+      .then(function(){
+        try{ localStorage.removeItem(KEY); }catch(e){}
+        document.getElementById('form-root').hidden = true;
+        document.querySelector('.closer').hidden = true;
+        var intro = document.querySelector('.intro-note');
+        if(intro) intro.hidden = true;
+        document.getElementById('thanks').hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function(){
+        sendBtn.disabled = false;
+        setStatus('Не удалось отправить — проверьте интернет и попробуйте ещё раз. Либо распечатайте анкету и передайте лично.', 'err');
+      });
   });
 })();
 </script>
