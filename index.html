@@ -54,6 +54,8 @@
   }
 
   *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   body{
     margin:0;
     background:var(--bg);
@@ -69,6 +71,23 @@
     padding:40px 22px 64px;
   }
 
+  /* reading-progress bar */
+  .progress{
+    position:fixed;
+    inset:0 0 auto 0;
+    height:3px;
+    background:transparent;
+    z-index:50;
+  }
+  .progress > i{
+    display:block;
+    height:100%;
+    width:0;
+    background:var(--accent);
+    transition:width .12s linear;
+  }
+  @media (prefers-reduced-motion:reduce){.progress > i{transition:none}}
+
   /* ---------- Masthead ---------- */
   .masthead{
     background:var(--accent-2);
@@ -78,6 +97,15 @@
     text-align:center;
     position:relative;
     overflow:hidden;
+  }
+  .masthead::after{
+    content:"";
+    position:absolute;
+    inset:9px;
+    border:1px solid var(--accent);
+    border-radius:15px;
+    opacity:.22;
+    pointer-events:none;
   }
   .eyebrow{
     font-size:.72rem;
@@ -135,21 +163,32 @@
     padding:26px 26px 28px;
     break-inside:avoid;
   }
-  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .sec-head{
+    display:flex;align-items:center;gap:14px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
   .sec-icon{
-    width:40px;height:40px;flex:none;
+    width:42px;height:42px;flex:none;
     display:grid;place-items:center;
     background:var(--accent-2);
     color:var(--accent);
-    border-radius:11px;
+    border-radius:12px;
+    box-shadow:inset 0 0 0 1px var(--line);
   }
   .sec-icon svg{width:22px;height:22px}
-  .sec-titles{display:flex;flex-direction:column;gap:1px}
-  .sec-titles .eyebrow{font-size:.66rem;letter-spacing:.16em;color:var(--soft-ink)}
+  .sec-titles{display:flex;flex-direction:column;gap:2px}
+  .sec-titles .eyebrow{
+    font-size:.64rem;
+    font-weight:700;
+    letter-spacing:.19em;
+    color:var(--accent-ink);
+  }
   .sec-titles h2{
     font-family:"Fraunces","Georgia",serif;
     font-weight:600;
-    font-size:1.35rem;
+    font-size:1.4rem;
+    letter-spacing:-.01em;
     margin:0;
     color:var(--ink);
   }
@@ -157,7 +196,7 @@
     background:var(--accent-2);
     border-radius:8px;
     padding:10px 14px;
-    margin:10px 0 4px;
+    margin:16px 0 0;
     font-size:.86rem;
     color:var(--accent-ink);
   }
@@ -169,7 +208,7 @@
     gap:18px 26px;
     margin-top:16px;
   }
-  .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0;scroll-margin-top:88px}
   .field.full{grid-column:1 / -1}
   .field label{
     font-size:.9rem;
@@ -177,6 +216,8 @@
     color:var(--soft-ink);
     text-wrap:pretty;
   }
+  .field:focus-within label{color:var(--accent-ink)}
+  .req{color:var(--berry);margin-left:3px;font-weight:700}
   input.line{
     width:100%;
     border:none;
@@ -221,32 +262,82 @@
   }
   .closer .date-row{max-width:280px;margin-bottom:18px}
   .disclaimer{font-size:.85rem;color:var(--soft-ink);margin:0}
-  .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:18px}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px}
   .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
     font-family:inherit;
     font-weight:600;
     font-size:.9rem;
-    padding:10px 20px;
+    padding:11px 22px;
     border-radius:999px;
     border:1.5px solid var(--accent);
     color:var(--accent);
     background:transparent;
     cursor:pointer;
   }
+  .btn svg{width:16px;height:16px}
   .btn:hover{background:var(--accent-2)}
-  .btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+  .btn.primary{
+    background:var(--accent);
+    color:var(--on-accent);
+    border-color:var(--accent);
+    box-shadow:0 6px 16px -8px var(--accent);
+  }
   .btn.primary:hover{background:var(--accent-ink)}
+  .btn.ghost{border-color:var(--line);color:var(--soft-ink)}
+  .btn:disabled{opacity:.5;cursor:default;box-shadow:none}
   .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .hint{font-size:.8rem;color:var(--soft-ink)}
   .hint b{color:var(--accent);font-weight:600}
-  .consent{font-size:.82rem;color:var(--soft-ink);margin:4px 0 14px;max-width:60ch}
-  .btn.ghost{border-color:var(--line);color:var(--soft-ink)}
-  .btn:disabled{opacity:.5;cursor:default}
+
+  .consent-box{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:var(--accent-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:6px 0 4px;
+    font-size:.88rem;
+    color:var(--ink);
+  }
+  .consent-box input{
+    flex:none;
+    width:18px;height:18px;
+    margin:2px 0 0;
+    accent-color:var(--accent);
+    cursor:pointer;
+  }
+  .consent-box label{cursor:pointer}
+  .consent-box.invalid{border-color:var(--berry);background:transparent}
+  .consent-box input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
   .status{font-size:.9rem;margin:12px 0 0;min-height:1.15em;font-weight:600}
   .status.err{color:var(--berry)}
   .status.ok{color:var(--accent)}
-  .thanks{text-align:left}
-  .thanks p{margin:6px 0 0;color:var(--soft-ink);font-size:.95rem}
+
+  .thanks{text-align:center;padding:44px 26px 46px}
+  .thanks .check{
+    width:66px;height:66px;
+    margin:0 auto 14px;
+    border-radius:50%;
+    background:var(--accent-2);
+    color:var(--accent);
+    display:grid;place-items:center;
+    box-shadow:inset 0 0 0 1px var(--line);
+  }
+  .thanks .check svg{width:32px;height:32px}
+  .thanks h2{
+    font-family:"Fraunces","Georgia",serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .thanks p{margin:8px auto 0;max-width:44ch;color:var(--soft-ink);font-size:.95rem}
 
   noscript{display:block;text-align:center;padding:40px;color:var(--soft-ink)}
 
@@ -266,13 +357,17 @@
     @page{margin:15mm}
     body{background:#fff;color:#1a1a1a}
     .page{max-width:100%;padding:0}
-    .no-print{display:none !important}
+    .no-print,.progress{display:none !important}
     .masthead{background:#eef3e6;border-color:#ccd}
+    .masthead::after{display:none}
     .section,.closer{box-shadow:none;border-color:#d8d8cf;break-inside:avoid}
     .produce{opacity:.5}
     textarea.area{background-color:#fff}
+    .consent-box{background:transparent;border-color:#999}
   }
 </style>
+
+<div class="progress no-print" aria-hidden="true"><i id="progress-bar"></i></div>
 
 <div class="page">
   <header class="masthead">
@@ -325,9 +420,15 @@
       <label for="fill_date">Дата заполнения</label>
       <input class="line" type="text" id="fill_date" data-k="fill_date" name="fill_date" placeholder="дд.мм.гггг">
     </div>
-    <p class="consent">Отправляя анкету, вы даёте согласие на обработку указанных данных для подготовки консультации. Ответы поступают напрямую нутрициологу и не передаются третьим лицам.</p>
+    <div class="consent-box" id="consent-box">
+      <input type="checkbox" id="consent" data-k="consent">
+      <label for="consent">Я даю согласие на обработку моих персональных данных, включая данные о состоянии здоровья, для подготовки и проведения консультации по питанию. Ответы поступают напрямую нутрициологу и не передаются третьим лицам. Согласие можно отозвать, написав нутрициологу.</label>
+    </div>
     <div class="actions no-print">
-      <button class="btn primary" id="send-btn" type="button">Отправить анкету</button>
+      <button class="btn primary" id="send-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+        Отправить анкету
+      </button>
       <button class="btn" id="print-btn" type="button">Печать / PDF</button>
       <button class="btn ghost" id="clear-btn" type="button">Очистить</button>
     </div>
@@ -337,11 +438,11 @@
   </section>
 
   <section class="section thanks" id="thanks" hidden>
-    <div class="sec-head">
-      <span class="sec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-      <div class="sec-titles"><span class="eyebrow">Готово</span><h2>Анкета отправлена</h2></div>
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
     </div>
-    <p>Спасибо за подробные ответы — они уже у нутрициолога. С вами свяжутся. Эту страницу можно закрыть.</p>
+    <h2>Анкета отправлена</h2>
+    <p>Спасибо за подробные ответы — они уже у нутрициолога. С вами свяжутся в ближайшее время. Эту страницу можно закрыть.</p>
   </section>
 </div>
 
@@ -369,9 +470,9 @@
 
   var FORM = [
     { n:'01', title:'Личные данные', icon:'user', fields:[
-      {k:'last_name',  label:'Фамилия', type:'line', half:true},
-      {k:'first_name', label:'Имя', type:'line', half:true},
-      {k:'phone',      label:'Телефон', type:'line', half:true},
+      {k:'last_name',  label:'Фамилия', type:'line', half:true, required:true},
+      {k:'first_name', label:'Имя', type:'line', half:true, required:true},
+      {k:'phone',      label:'Телефон', type:'line', half:true, required:true},
       {k:'birth',      label:'Дата рождения', type:'line', half:true},
       {k:'age',        label:'Возраст (полных лет)', type:'line', half:true}
     ]},
@@ -457,6 +558,10 @@
       var wrap = el('div','field' + (f.type === 'area' ? ' full' : (f.half ? ' half' : ' full')));
       var id = 'f_' + f.k;
       var lab = el('label'); lab.setAttribute('for', id); lab.textContent = f.label;
+      if(f.required){
+        var rq = el('span','req'); rq.textContent = '*'; rq.title = 'Обязательное поле';
+        lab.appendChild(rq);
+      }
       wrap.appendChild(lab);
 
       var input;
@@ -494,7 +599,11 @@
 
   function collect(){
     var o = {};
-    allFields.forEach(function(elm){ o[elm.getAttribute('data-k')] = elm.value; });
+    allFields.forEach(function(elm){
+      o[elm.getAttribute('data-k')] = elm.type === 'checkbox'
+        ? (elm.checked ? 'Да, согласие получено' : '')
+        : elm.value;
+    });
     return o;
   }
   function save(){
@@ -517,7 +626,9 @@
     try{ data = JSON.parse(raw); }catch(e){ return; }
     allFields.forEach(function(elm){
       var k = elm.getAttribute('data-k');
-      if(data[k] != null) elm.value = data[k];
+      if(data[k] == null) return;
+      if(elm.type === 'checkbox') elm.checked = !!data[k];
+      else elm.value = data[k];
     });
   }
 
@@ -536,7 +647,11 @@
   document.getElementById('clear-btn').addEventListener('click', function(){
     if(!window.confirm('Очистить все поля и удалить сохранённый черновик?')) return;
     try{ localStorage.removeItem(KEY); }catch(e){}
-    allFields.forEach(function(elm){ elm.value = ''; });
+    allFields.forEach(function(elm){
+      if(elm.type === 'checkbox') elm.checked = false;
+      else elm.value = '';
+    });
+    document.getElementById('consent-box').classList.remove('invalid');
     areas.forEach(grow);
     if(hint) hint.innerHTML = 'Черновик очищен';
   });
@@ -544,10 +659,15 @@
   // ---- submit to nutritionist ----
   var sendBtn = document.getElementById('send-btn');
   var statusEl = document.getElementById('status');
+  var consent = document.getElementById('consent');
+  var consentBox = document.getElementById('consent-box');
   function setStatus(msg, kind){
     statusEl.textContent = msg || '';
     statusEl.className = 'status' + (kind ? ' ' + kind : '');
   }
+  consent.addEventListener('change', function(){
+    if(consent.checked) consentBox.classList.remove('invalid');
+  });
   sendBtn.addEventListener('click', function(){
     if(!ENDPOINT){
       setStatus('Форма ещё не подключена к таблице ответов. Сообщите об этом нутрициологу.', 'err');
@@ -560,6 +680,13 @@
       setStatus('Пожалуйста, укажите ' + missing.map(function(m){ return m[1]; }).join(', ') + '.', 'err');
       var first = document.getElementById('f_' + missing[0][0]);
       if(first){ first.focus(); first.scrollIntoView({block:'center', behavior:'smooth'}); }
+      return;
+    }
+    if(!consent.checked){
+      consentBox.classList.add('invalid');
+      setStatus('Чтобы отправить анкету, отметьте согласие на обработку персональных данных.', 'err');
+      consent.focus();
+      consentBox.scrollIntoView({block:'center', behavior:'smooth'});
       return;
     }
     sendBtn.disabled = true;
@@ -582,5 +709,17 @@
         setStatus('Не удалось отправить — проверьте интернет и попробуйте ещё раз. Либо распечатайте анкету и передайте лично.', 'err');
       });
   });
+
+  // ---- reading progress ----
+  var bar = document.getElementById('progress-bar');
+  function updateProgress(){
+    var d = document.documentElement;
+    var max = d.scrollHeight - d.clientHeight;
+    var ratio = max > 0 ? d.scrollTop / max : 0;
+    bar.style.width = (Math.min(1, Math.max(0, ratio)) * 100) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
 })();
 </script>
